@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 #
-# Exploit-DB search utility performing search through the files unlike
-# most other similar tools that search only through files.csv
+# Exploit-DB search utility performing search through the actual exploit
+# source files unlike most similar tools (including searchsploit) that 
+# search only through files.csv
 #  
 # On Kali Linux `exploitdb` package must be installed. Or you can get
 # the latest database version from github and then edit EXDBPATH
