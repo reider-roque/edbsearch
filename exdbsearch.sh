@@ -17,7 +17,23 @@ ALL_TYPES="dos local remote shellcode webapps"
 
 
 function show_help {
-    echo "Usage: $0 -p platform -t type [-c] search term"
+    printf "Usage: $0 -p platform -t type [-c] SEARCH TERMS\n\n"
+    printf "Perform a search through the actual exploit source files for the specified\n"
+    printf "SEARCH TERMS in the Exploit-DB database.\n\n"
+    printf "Options:\n"
+    printf "  -p, --platform platform\n"
+    printf "\t\tTarget platform to search exploits for. Use --help-platforms\n"
+    printf "\t\tto get the list of available platforms\n"
+    printf "  -t, --type type\n"
+    printf "\t\tType of exploit to search for. Possible values: dos, local,\n"
+    printf "\t\tremote, shellcode, webapps\n"
+    printf "  -c"
+    printf "\t\tUse case-sensitive search. The default is case-insensitive\n"
+    printf "  -h, --help"
+    printf "\tShow this help\n"
+    printf "      --help-platforms\n"
+    printf "\t\tShow the list of available platform for which exploits exist \n"
+    printf "\t\tin the database\n"
     
 }
 
