@@ -13,7 +13,6 @@
 
 EXDBPATH="/usr/share/exploitdb"
 ALL_PLATFORMS=$(ls -d1 $EXDBPATH/platforms/*/ | cut -d/ -f6 | tr '\n' ' ')
-ALL_TYPES="dos local remote shellcode webapps" 
 
 
 function show_help {
@@ -64,10 +63,6 @@ do
         ;;
         --help-platforms)
             echo $ALL_PLATFORMS 
-            exit 0
-        ;;
-        --help-types)
-            echo $ALL_TYPES 
             exit 0
         ;;
         -*) # unknown option
