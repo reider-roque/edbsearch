@@ -21,7 +21,7 @@ CASEINS="i"
 ##### HELPER FUNCTIONS BEGIN #####
 
 function show_help {
-    printf "Usage: $0 -p platform -t type [-c] SEARCH TERMS\n\n"
+    printf "Usage: $0 [-p platform] [-t type] [-c] SEARCH TERMS\n\n"
     printf "Perform a search through the actual exploit source files for the specified\n"
     printf "SEARCH TERMS in the Exploit-DB database.\n\n"
     printf "Options:\n"
@@ -32,6 +32,8 @@ function show_help {
     printf "  -t, --type type"
     printf "\tType of exploit to search for. Possible types: dos,\n"
     printf "\t\t\tlocal, remote, shellcode, webapps\n"
+    printf "\t\t\tThis optin is currently ignored if you don't choose\n"
+    printf "\t\t\tany  platform with -p option\n"
     printf "  -c"
     printf "\t\t\tUse case-sensitive search. The default is\n"
     printf "\t\t\tcase-insensitive\n"
