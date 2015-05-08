@@ -83,12 +83,12 @@ do
             echo $ALL_PLATFORMS 
             exit 0
         ;;
-        -*) # unknown option
+        -*) # Unknown option
             print_status "Error: option \`$key\` is not known." "warn"
             print_status "Use \`$0 --help\` for more information." "info" 
             exit 1
         ;;
-        *) # The rest is search tems, stop parsing for options
+        *) # The rest is search terms, stop parsing for options
             break
     esac
     shift
