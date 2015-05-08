@@ -161,15 +161,23 @@ if [ -z "$SEARCH_RESULTS" ]; then
     exit 0
 fi
 
+# Exploit description will be read from here
 FILES_CSV="$EDB_PATH/files.csv"
 
-# Presenting search results
 for SE_RESULT in $SEARCH_RESULTS
 do
     EDB_ID=$(echo $SE_RESULT | rev | cut -d/ -f1 | rev | cut -d. -f1)
     EDB_INFO_LINE=$(egrep "^$EDB_ID" "$FILES_CSV")
-    # Sed is used to remove quores here
-    EDB_DESC=$(echo $EDB_INFO_LINE | cut -d, -f3 | sed 's/^"\(.*\)"$/\1/')
+
+    # Grep searches for the first quoted field (description); sed is used to remove quotes.
+    # Third field must be quoted for the search to work. Currently there is only one line
+    # that doesn't match this condition (EDBID: 15879); the command to find all such lines:
+    # cat /usr/share/exploitdb/files.csv | cut -d, -f3 | grep -v "^\""
+    EDB_DESC=$(echo $EDB_INFO_LINE | grep -o '"[^"]*"' | head -1 | sed 's/^"\(.*\)"$/\1/')
+
+    # Old version of the above line; it fails when description has commas in it
+    # EDB_DESC=$(echo $EDB_INFO_LINE | cut -d, -f3 | sed 's/^"\(.*\)"$/\1/')
+
     printf "$EDB_DESC\n"
     printf "\t$SE_RESULT\n"
 done
