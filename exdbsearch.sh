@@ -142,7 +142,7 @@ shift
 # Enumerating through the rest of search terms
 for SE_TERM in "$@"
 do
-    SEARCH_CMD="$SEARCH_CMD xargs egrep -rl$CASEINS '$SE_TERM' $SEARCH_PATH |"
+    SEARCH_CMD="$SEARCH_CMD xargs egrep -l$CASEINS '$SE_TERM' $SEARCH_PATH |"
 done
 
 SEARCH_CMD="$SEARCH_CMD sort -V"
