@@ -40,6 +40,22 @@ function show_help {
 }
 
 
+function print_status() {
+    MESSAGE=$1
+    TYPE=$2
+    case $TYPE in
+        warn)
+            printf "\033[1;31m[!]\033[1;m $MESSAGE\n" 
+        ;;
+        fail)
+            printf "\033[1;31m[-]\033[1;m $MESSAGE\n" 
+        ;;
+        info|*)  # All other types are informational
+            printf "\033[1;34m[*]\033[1;m $MESSAGE\n" 
+        ;;
+    esac
+}
+
 # Parsing arguments
 while [[ $# > 0 ]]
 do
@@ -67,8 +83,8 @@ do
             exit 0
         ;;
         -*) # unknown option
-            echo "Error: option '$key' is unknown."
-            show_help
+            print_status "Error: option \`$key\` is not known." "warn"
+            print_status "Use \`$0 --help\` for more information." "info" 
             exit 1
         ;;
         *) # The rest is search tems, stop parsing for options
@@ -82,19 +98,17 @@ done
 # Check if we have any search terms
 if [[ $# < 1 ]]
 then
-    echo "Error: no search terms supplied"
-    show_help
+    print_status "Error: no search terms supplied." "warn"
+    print_status "Use \`$0 --help\` for more information." "info" 
     exit 1
 fi
 
 if [ -z $PLATFORM ]; then
     SEARCH_PATH="$EXDBPATH/platforms/"
-    echo "[*] No platform was chosen. Will search through ALL exploits. It may take"
-    echo "    some time."
+    print_status "No platform was chosen. Will search through ALL exploits. It may take\n    some time.\n" "info"
 elif [ -z $TYPE ]; then
     SEARCH_PATH="$EXDBPATH/platforms/$PLATFORM/"
-    echo "[*] No exploit type was chosen. Will search through all exploits for"
-    echo "    $PLATFORM platform."
+    print_status "No exploit type was chosen. Will search through all exploits for\n    $PLATFORM platform.\n" "info"
 else
     SEARCH_PATH="$EXDBPATH/platforms/$PLATFORM/$TYPE"
 fi    
@@ -102,7 +116,7 @@ fi
 
 if [ ! -d "$SEARCH_PATH" ]
 then
-    echo "Error: no $TYPE type exploits exist for $PLATFORM platform."
+    print_status "Error: no $TYPE type exploits exist for $PLATFORM platform." "warn"
     exit 0
 fi
 
@@ -131,7 +145,7 @@ SEARCH_RESULTS=$(eval "$SEARCH_CMD")
 
 if [ -z "$SEARCH_RESULTS" ]
 then
-    echo "Nothing found!"
+    print_status "Nothing found!" "fail"
     exit 0
 fi
 
