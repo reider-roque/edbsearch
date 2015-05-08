@@ -7,7 +7,7 @@ search only through files.csv.
 #Prerequisites
   
 On Kali Linux `exploitdb` package must be installed. Or you can get
-the latest database version from github and then edit EXDBPATH
+the latest database version from github and then edit `EDB_PATH`
 variable to point to your chosen location.
 
 #Usage

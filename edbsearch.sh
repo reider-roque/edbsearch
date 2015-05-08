@@ -6,16 +6,16 @@
 # search only through files.csv
 #  
 # On Kali Linux `exploitdb` package must be installed. Or you can get
-# the latest database version from github and then edit EXDBPATH
+# the latest database version from github and then edit EDB_PATH
 # variable to point to your chosen location
 #
 # Author: Oleg Mitrofanov, 2015
 #
 
-EXDBPATH="/usr/share/exploitdb"
-ALL_PLATFORMS=$(ls -d1 $EXDBPATH/platforms/*/ | rev | cut -d/ -f2 | rev | tr '\n' ' ')
+EDB_PATH="/usr/share/exploitdb"
+ALL_PLATFORMS=$(ls -d1 $EDB_PATH/platforms/*/ | rev | cut -d/ -f2 | rev | tr '\n' ' ')
 # For passing -i flag to grep for case-insensitive search (default)
-CASEINS="i"
+CASE_INS="i"
 
 
 ##### HELPER FUNCTIONS BEGIN #####
@@ -82,7 +82,7 @@ do
             shift
         ;;
         -c|--case-sensitive)
-            CASEINS=""
+            CASE_INS=""
         ;;
         -h|--help)
             show_help
@@ -117,13 +117,13 @@ fi
 
 
 if [ -z $PLATFORM ]; then
-    SEARCH_PATH="$EXDBPATH/platforms/"
+    SEARCH_PATH="$EDB_PATH/platforms/"
     print_status "No platform was chosen. Will search through ALL exploits. It may take\n    some time.\n" "info"
 elif [ -z $TYPE ]; then
-    SEARCH_PATH="$EXDBPATH/platforms/$PLATFORM/"
+    SEARCH_PATH="$EDB_PATH/platforms/$PLATFORM/"
     print_status "No exploit type was chosen. Will search through all exploits for\n    $PLATFORM platform.\n" "info"
 else
-    SEARCH_PATH="$EXDBPATH/platforms/$PLATFORM/$TYPE"
+    SEARCH_PATH="$EDB_PATH/platforms/$PLATFORM/$TYPE"
 fi    
     
 
@@ -138,13 +138,13 @@ fi
 ##### SEARCH CMD FORMATION BEGIN #####
 
 # Set the first search term
-SEARCH_CMD="egrep -rl$CASEINS \"$1\" $SEARCH_PATH |"
+SEARCH_CMD="egrep -rl$CASE_INS \"$1\" $SEARCH_PATH |"
 shift
 
 # Enumerating through the rest of search terms
 for SE_TERM in "$@"
 do
-    SEARCH_CMD="$SEARCH_CMD xargs egrep -l$CASEINS '$SE_TERM' $SEARCH_PATH |"
+    SEARCH_CMD="$SEARCH_CMD xargs egrep -l$CASE_INS '$SE_TERM' $SEARCH_PATH |"
 done
 
 SEARCH_CMD="$SEARCH_CMD sort -V"
@@ -161,7 +161,7 @@ if [ -z "$SEARCH_RESULTS" ]; then
     exit 0
 fi
 
-FILES_CSV="$EXDBPATH/files.csv"
+FILES_CSV="$EDB_PATH/files.csv"
 
 # Presenting search results
 for SE_RESULT in $SEARCH_RESULTS
