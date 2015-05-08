@@ -14,6 +14,8 @@
 
 EXDBPATH="/usr/share/exploitdb"
 ALL_PLATFORMS=$(ls -d1 $EXDBPATH/platforms/*/ | rev | cut -d/ -f2 | rev | tr '\n' ' ')
+# For passing -i flag to grep for case-insensitive search (default)
+CASEINS="i"
 
 
 function show_help {
@@ -73,7 +75,7 @@ do
             shift
         ;;
         -c|--case-sensitive)
-            CASESENS="true"
+            CASEINS=""
         ;;
         -h|--help)
             show_help
@@ -94,6 +96,7 @@ do
     shift
 done
     
+
 ##### INPUT VALIDATION BEGIN #####
 
 # Check if we have any search terms
@@ -122,12 +125,6 @@ fi
 
 ##### INPUT VALIDATION END #####
 
-# For passing -i flag to grep for case-insensitive search
-if [[ $CASESENS == "true" ]]; then
-    CASEINS="i"
-else
-    CASEINS=""
-fi
 
 # Set the first search term
 SEARCH_CMD="egrep -rl$CASEINS \"$1\" $SEARCH_PATH | "
