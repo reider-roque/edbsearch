@@ -13,7 +13,7 @@
 #
 
 EXDBPATH="/usr/share/exploitdb"
-ALL_PLATFORMS=$(ls -d1 $EXDBPATH/platforms/*/ | cut -d/ -f6 | tr '\n' ' ')
+ALL_PLATFORMS=$(ls -d1 $EXDBPATH/platforms/*/ | rev | cut -d/ -f2 | rev | tr '\n' ' ')
 
 
 function show_help {
@@ -77,8 +77,9 @@ do
     shift
 done
     
+##### INPUT VALIDATION BEGIN #####
 
-# Check if we have any search arguments
+# Check if we have any search terms
 if [[ $# < 1 ]]
 then
     echo "Error: no search terms supplied"
@@ -86,13 +87,26 @@ then
     exit 1
 fi
 
-SEARCH_PATH="$EXDBPATH/platforms/$PLATFORM/$TYPE/"
+if [ -z $PLATFORM ]; then
+    SEARCH_PATH="$EXDBPATH/platforms/"
+    echo "[*] No platform was chosen. Will search through ALL exploits. It may take"
+    echo "    some time."
+elif [ -z $TYPE ]; then
+    SEARCH_PATH="$EXDBPATH/platforms/$PLATFORM/"
+    echo "[*] No exploit type was chosen. Will search through all exploits for"
+    echo "    $PLATFORM platform."
+else
+    SEARCH_PATH="$EXDBPATH/platforms/$PLATFORM/$TYPE"
+fi    
+    
+
 if [ ! -d "$SEARCH_PATH" ]
 then
-    echo "Error: no $TYPE exploits exist for $PLATFORM platform."
+    echo "Error: no $TYPE type exploits exist for $PLATFORM platform."
     exit 0
 fi
 
+##### INPUT VALIDATION END #####
 
 # For passing -i flag to grep for case-insensitive search
 if [[ $CASESENS == "true" ]]
