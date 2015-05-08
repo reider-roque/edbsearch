@@ -56,6 +56,7 @@ function print_status() {
     esac
 }
 
+
 # Parsing arguments
 while [[ $# > 0 ]]
 do
@@ -96,12 +97,12 @@ done
 ##### INPUT VALIDATION BEGIN #####
 
 # Check if we have any search terms
-if [[ $# < 1 ]]
-then
+if [[ $# < 1 ]]; then
     print_status "Error: no search terms supplied." "warn"
     print_status "Use \`$0 --help\` for more information." "info" 
     exit 1
 fi
+
 
 if [ -z $PLATFORM ]; then
     SEARCH_PATH="$EXDBPATH/platforms/"
@@ -114,8 +115,7 @@ else
 fi    
     
 
-if [ ! -d "$SEARCH_PATH" ]
-then
+if [ ! -d "$SEARCH_PATH" ]; then
     print_status "Error: no $TYPE type exploits exist for $PLATFORM platform." "warn"
     exit 0
 fi
@@ -123,8 +123,7 @@ fi
 ##### INPUT VALIDATION END #####
 
 # For passing -i flag to grep for case-insensitive search
-if [[ $CASESENS == "true" ]]
-then
+if [[ $CASESENS == "true" ]]; then
     CASEINS="i"
 else
     CASEINS=""
@@ -143,8 +142,7 @@ done
 SEARCH_CMD+="sort -V"
 SEARCH_RESULTS=$(eval "$SEARCH_CMD")
 
-if [ -z "$SEARCH_RESULTS" ]
-then
+if [ -z "$SEARCH_RESULTS" ]; then
     print_status "Nothing found!" "fail"
     exit 0
 fi
@@ -161,10 +159,3 @@ do
     printf "\t$SE_RESULT\n"
 done
 exit 0
-
-# echo "PLATFORM  = $PLATFORM"
-# echo "TYPE = $TYPE"
-# echo "CASESENS = $CASESENS"
-# echo "CASEINS = $CASEINS"
-# echo "SEARCH_PATH = $SEARCH_PATH"
-# echo "SEARCH_CMD = $SEARCH_CMD"
