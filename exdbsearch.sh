@@ -18,6 +18,8 @@ ALL_PLATFORMS=$(ls -d1 $EXDBPATH/platforms/*/ | rev | cut -d/ -f2 | rev | tr '\n
 CASEINS="i"
 
 
+##### HELPER FUNCTIONS BEGIN #####
+
 function show_help {
     printf "Usage: $0 -p platform -t type [-c] SEARCH TERMS\n\n"
     printf "Perform a search through the actual exploit source files for the specified\n"
@@ -58,8 +60,11 @@ function print_status() {
     esac
 }
 
+##### HELPER FUNCTIONS END #####
 
-# Parsing arguments
+
+##### PARSE ARGUMENTS BEGIN #####
+
 while [[ $# > 0 ]]
 do
     key="$1"
@@ -95,6 +100,8 @@ do
     esac
     shift
 done
+
+##### PARSE ARGUMENTS END #####
     
 
 ##### INPUT VALIDATION BEGIN #####
@@ -126,6 +133,8 @@ fi
 ##### INPUT VALIDATION END #####
 
 
+##### SEARCH CMD FORMATION BEGIN #####
+
 # Set the first search term
 SEARCH_CMD="egrep -rl$CASEINS \"$1\" $SEARCH_PATH |"
 shift
@@ -138,8 +147,10 @@ done
 
 SEARCH_CMD="$SEARCH_CMD sort -V"
 
-echo "SEARCH_CMD = $SEARCH_CMD"
-exit 1
+##### SEARCH CMD FORMATION END #####
+
+
+##### DISPLAY SEARCH RESULTS BEGIN  #####
 
 SEARCH_RESULTS=$(eval "$SEARCH_CMD")
 
@@ -161,3 +172,5 @@ do
     printf "\t$SE_RESULT\n"
 done
 exit 0
+
+##### DISPLAY SEARCH RESULTS END  #####
