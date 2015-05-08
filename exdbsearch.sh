@@ -127,16 +127,20 @@ fi
 
 
 # Set the first search term
-SEARCH_CMD="egrep -rl$CASEINS \"$1\" $SEARCH_PATH | "
+SEARCH_CMD="egrep -rl$CASEINS \"$1\" $SEARCH_PATH |"
 shift
 
 # Enumerating through the rest of search terms
 for SE_TERM in "$@"
 do
-    SEARCH_CMD+="xargs egrep -rl$CASEINS '$SE_TERM' $SEARCH_PATH | "
+    SEARCH_CMD="$SEARCH_CMD xargs egrep -rl$CASEINS '$SE_TERM' $SEARCH_PATH |"
 done
 
-SEARCH_CMD+="sort -V"
+SEARCH_CMD="$SEARCH_CMD sort -V"
+
+echo "SEARCH_CMD = $SEARCH_CMD"
+exit 1
+
 SEARCH_RESULTS=$(eval "$SEARCH_CMD")
 
 if [ -z "$SEARCH_RESULTS" ]; then
@@ -151,8 +155,9 @@ for SE_RESULT in $SEARCH_RESULTS
 do
     EDB_ID=$(echo $SE_RESULT | rev | cut -d/ -f1 | rev | cut -d. -f1)
     EDB_INFO_LINE=$(egrep "^$EDB_ID" "$FILES_CSV")
+    # Sed is used to remove quores here
     EDB_DESC=$(echo $EDB_INFO_LINE | cut -d, -f3 | sed 's/^"\(.*\)"$/\1/')
-    echo "$EDB_DESC"
+    printf "$EDB_DESC\n"
     printf "\t$SE_RESULT\n"
 done
 exit 0
