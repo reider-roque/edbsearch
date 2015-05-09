@@ -53,6 +53,9 @@ function print_status() {
         warn)
             printf "\033[1;31m[!]\033[1;m $MESSAGE\n" 
         ;;
+        success)
+            printf "\033[1;32m[+]\033[1;m $MESSAGE\n" 
+        ;;
         fail)
             printf "\033[1;31m[-]\033[1;m $MESSAGE\n" 
         ;;
@@ -118,10 +121,10 @@ fi
 
 if [ -z $PLATFORM ]; then
     SEARCH_PATH="$EDB_PATH/platforms/"
-    print_status "No platform was chosen. Will search through ALL exploits. It may take\n    some time.\n" "info"
+    print_status "No platform was chosen. Will search through ALL exploits. It may take\n    some time." "info"
 elif [ -z $TYPE ]; then
     SEARCH_PATH="$EDB_PATH/platforms/$PLATFORM/"
-    print_status "No exploit type was chosen. Will search through all exploits for\n    $PLATFORM platform.\n" "info"
+    print_status "No exploit type was chosen. Will search through all exploits for\n    $PLATFORM platform." "info"
 else
     SEARCH_PATH="$EDB_PATH/platforms/$PLATFORM/$TYPE"
 fi    
@@ -163,20 +166,23 @@ fi
 
 # Exploit description will be read from here
 FILES_CSV="$EDB_PATH/files.csv"
-
+print_status "Found matches:\n------------------" "success"
 for SE_RESULT in $SEARCH_RESULTS
 do
     EDB_ID=$(echo $SE_RESULT | rev | cut -d/ -f1 | rev | cut -d. -f1)
     EDB_INFO_LINE=$(egrep "^$EDB_ID" "$FILES_CSV")
 
-    # Grep searches for the first quoted field (description); sed is used to remove quotes.
-    # Third field must be quoted for the search to work. Currently there is only one line
-    # that doesn't match this condition (EDBID: 15879); the command to find all such lines:
-    # cat /usr/share/exploitdb/files.csv | cut -d, -f3 | grep -v "^\""
-    EDB_DESC=$(echo $EDB_INFO_LINE | grep -o '"[^"]*"' | head -1 | sed 's/^"\(.*\)"$/\1/')
-
-    # Old version of the above line; it fails when description has commas in it
+    # First version - fails when third (description) field has commas in it
     # EDB_DESC=$(echo $EDB_INFO_LINE | cut -d, -f3 | sed 's/^"\(.*\)"$/\1/')
+
+    # Second version - fails if the third field is not quoted
+    # EDB_DESC=$(echo $EDB_INFO_LINE | grep -o '"[^"]*"' | head -1 | \
+    #     sed 's/^"\(.*\)"$/\1/')
+    
+    # Third version - fails if there are empty fields preceding
+    # description field. This solution works best at this time.
+    EDB_DESC=$(echo $EDB_INFO_LINE | egrep -o '([^,]+)|("[^"]+")' | \
+        head -n3 | tail -n1 | sed 's/^"\(.*\)"$/\1/')
 
     printf "$EDB_DESC\n"
     printf "\t$SE_RESULT\n"
