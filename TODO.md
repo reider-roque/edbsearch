@@ -7,6 +7,8 @@ Make it search through all exploits of all platforms that have exploits of
 the specified type available
 * Add negate operator (probably use `~`) for search terms to search for
 exploits that do not contain specifed term
+* Add `-E` and `-G` options to interpret search terms as extended (ERE) or basic
+(BRE) search patterns (safe as for grep)
 * Review analogous tools for features worth porting:
     * searchsploit
     * https://github.com/mattoufoutu/exploitdb
