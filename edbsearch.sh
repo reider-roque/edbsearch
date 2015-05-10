@@ -150,13 +150,16 @@ do
     SEARCH_CMD="$SEARCH_CMD xargs egrep -l$CASE_INS '$SE_TERM' |"
 done
 
-SEARCH_CMD="$SEARCH_CMD sort -V"
+# To sort results we first put the last (filename) field in front, then
+# do numeric (version) sort, and then remove the filename field we put
+# in front
+SEARCH_CMD="$SEARCH_CMD awk -F/ '{ print \$NF, \$0 }' | sort -V | sed 's/^[^ ]* //'"
 
 ##### SEARCH CMD FORMATION END #####
 
 
 ##### DISPLAY SEARCH RESULTS BEGIN  #####
- 
+
 SEARCH_RESULTS=$(eval "$SEARCH_CMD")
 
 if [ -z "$SEARCH_RESULTS" ]; then
