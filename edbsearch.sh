@@ -141,13 +141,13 @@ fi
 ##### SEARCH CMD FORMATION BEGIN #####
 
 # Set the first search term
-SEARCH_CMD="egrep -rl$CASE_INS \"$1\" $SEARCH_PATH |"
+SEARCH_CMD="egrep -rl$CASE_INS '$1' $SEARCH_PATH |"
 shift
 
 # Enumerating through the rest of search terms
 for SE_TERM in "$@"
 do
-    SEARCH_CMD="$SEARCH_CMD xargs egrep -l$CASE_INS '$SE_TERM' $SEARCH_PATH |"
+    SEARCH_CMD="$SEARCH_CMD xargs egrep -l$CASE_INS '$SE_TERM' |"
 done
 
 SEARCH_CMD="$SEARCH_CMD sort -V"
@@ -156,7 +156,7 @@ SEARCH_CMD="$SEARCH_CMD sort -V"
 
 
 ##### DISPLAY SEARCH RESULTS BEGIN  #####
-
+ 
 SEARCH_RESULTS=$(eval "$SEARCH_CMD")
 
 if [ -z "$SEARCH_RESULTS" ]; then
