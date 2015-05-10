@@ -141,13 +141,13 @@ fi
 ##### SEARCH CMD FORMATION BEGIN #####
 
 # Set the first search term
-SEARCH_CMD="egrep -rl$CASE_INS '$1' $SEARCH_PATH |"
+SEARCH_CMD="grep -Frl$CASE_INS '$1' $SEARCH_PATH |"
 shift
 
 # Enumerating through the rest of search terms
 for SE_TERM in "$@"
 do
-    SEARCH_CMD="$SEARCH_CMD xargs egrep -l$CASE_INS '$SE_TERM' |"
+    SEARCH_CMD="$SEARCH_CMD xargs grep -Fl$CASE_INS '$SE_TERM' |"
 done
 
 # To sort results we first put the last (filename) field in front, then
@@ -167,13 +167,13 @@ if [ -z "$SEARCH_RESULTS" ]; then
     exit 0
 fi
 
-# Exploit description will be read from here
+# Exploit description will be read from files.csv
 FILES_CSV="$EDB_PATH/files.csv"
 print_status "Found matches:\n------------------" "success"
 for SE_RESULT in $SEARCH_RESULTS
 do
     EDB_ID=$(echo $SE_RESULT | rev | cut -d/ -f1 | rev | cut -d. -f1)
-    EDB_INFO_LINE=$(egrep "^$EDB_ID" "$FILES_CSV")
+    EDB_INFO_LINE=$(grep -E "^$EDB_ID" "$FILES_CSV")
 
     # First version - fails when third (description) field has commas in it
     # EDB_DESC=$(echo $EDB_INFO_LINE | cut -d, -f3 | sed 's/^"\(.*\)"$/\1/')
@@ -184,7 +184,7 @@ do
     
     # Third version - fails if there are empty fields preceding
     # description field. This solution works best at this time.
-    EDB_DESC=$(echo $EDB_INFO_LINE | egrep -o '([^,]+)|("[^"]+")' | \
+    EDB_DESC=$(echo $EDB_INFO_LINE | grep -Eo '([^,]+)|("[^"]+")' | \
         head -n3 | tail -n1 | sed 's/^"\(.*\)"$/\1/')
 
     printf "$EDB_DESC\n"
