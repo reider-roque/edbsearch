@@ -9,6 +9,8 @@ the specified type available
 exploits that do not contain specifed term
 * Add `-E` and `-G` options to interpret search terms as extended (ERE) or basic
 (BRE) search patterns (same as for grep)
+* Add `-I` (for Interactive) option to open in default editor or copy into
+current directory selected exploits (by numbers).
 * Review analogous tools for features worth porting:
     * searchsploit
     * https://github.com/mattoufoutu/exploitdb
