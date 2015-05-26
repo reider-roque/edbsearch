@@ -16,12 +16,13 @@ EDB_PATH="/usr/share/exploitdb"
 ALL_PLATFORMS=$(ls -d1 $EDB_PATH/platforms/*/ | rev | cut -d/ -f2 | rev | tr '\n' ' ')
 # For passing -i flag to grep for case-insensitive search (default)
 CASE_INS="i"
+SCRIPT_NAME=$(basename $0)
 
 
 ##### HELPER FUNCTIONS BEGIN #####
 
 function show_help {
-    printf "Usage: $0 [-p platform] [-t type] [-c] SEARCH TERMS\n\n"
+    printf "Usage: $SCRIPT_NAME [-p platform] [-t type] [-c] SEARCH TERMS\n\n"
     printf "Perform a search through the actual exploit source files for the specified\n"
     printf "SEARCH TERMS in the Exploit-DB database.\n\n"
     printf "Options:\n"
@@ -97,7 +98,7 @@ do
         ;;
         -*) # Unknown option
             print_status "Error: option \`$key\` is not known." "warn"
-            print_status "Use \`$0 --help\` for more information." "info" 
+            print_status "Use \`$SCRIPT_NAME --help\` for more information." "info" 
             exit 1
         ;;
         *) # The rest is search terms, stop parsing for options
@@ -114,7 +115,7 @@ done
 # Check if we have any search terms
 if [[ $# < 1 ]]; then
     print_status "Error: no search terms supplied." "warn"
-    print_status "Use \`$0 --help\` for more information." "info" 
+    print_status "Use \`$SCRIPT_NAME --help\` for more information." "info" 
     exit 1
 fi
 
